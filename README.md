@@ -1,7 +1,7 @@
 # cbpi-pt100-sensor
 PT100 probes using a max31865 chip.  for wiring go to https://github.com/thegreathoe/cbpi-pt100-sensor/ updated 7/2/17
 
-If you are updating from a previous version, you will need to set the reference resistors on the craftbeerpi hardware page! 
+If you are updating from a previous version, you will need to set the reference resistors on the craftbeerpi hardware page!  My chip uses a 430 ohm resistor 
 
 Using a max31865 board like: https://learn.adafruit.com/adafruit-max31865-rtd-pt100-amplifier/
 
