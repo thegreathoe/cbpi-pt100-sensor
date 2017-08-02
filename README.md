@@ -1,5 +1,5 @@
 # cbpi-pt100-sensor
-PT100 probes using a max31865 chip.  for wiring go to https://github.com/thegreathoe/cbpi-pt100-sensor/ updated 7/2/17
+PT100 probes using a max31865 chip.  for wiring go to https://github.com/thegreathoe/cbpi-pt100-sensor/ updated 8/2/17
 
 You may need to clear your browser cache if updating from a previous version!!!!!
 
