@@ -34,12 +34,13 @@ class max31865(object):
 	   3rd and 4th degree parts of the polynomial) and the straight line approx.
 	   temperature is calculated with the quadratic formula one being the most accurate.
 	"""
-	def __init__(self, csPin = 8, misoPin = 9, mosiPin = 10, clkPin = 11, RefRest = 430):
+	def __init__(self, csPin, misoPin, mosiPin, clkPin, RefRest, ConfigReg):
 		self.csPin = csPin
 		self.misoPin = misoPin
 		self.mosiPin = mosiPin
 		self.clkPin = clkPin
 		self.RefRest = RefRest
+		self.ConfigReg = ConfigReg
 		self.setupGPIO()
 		
 	def setupGPIO(self):
@@ -60,23 +61,25 @@ class max31865(object):
 		# 0x8x to specify 'write register value'
 		# 0xx0 to specify 'configuration register'
 		#
-		# 0b10110010 = 0xB2
+		#
 		# Config Register
 		# ---------------
-		# bit 7: Vbias -> 1 (ON)
-		# bit 6: Conversion Mode -> 0 (MANUAL)
+		# bit 7: Vbias -> 1 (ON), 0 (OFF)
+		# bit 6: Conversion Mode -> 0 (MANUAL), 1 (AUTO) !!don't change the noch fequency when auto
 		# bit5: 1-shot ->1 (ON)
-		# bit4: 3-wire select -> 1 (3 wire config)
+		# bit4: 3-wire select -> 1 (3 wires config), 0 (2 or 4 wires)
 		# bits 3-2: fault detection cycle -> 0 (none)
 		# bit 1: fault status clear -> 1 (clear any fault)
-		# bit 0: 50/60 Hz filter select -> 0 (60Hz)
+		# bit 0: 50/60 Hz filter select -> 0 (60Hz - Faster converson), 1 (50Hz)
 		#
-		# 0b11010010 or 0xD2 for continuous auto conversion 
-		# at 60Hz (faster conversion)
+		# 0b10110010 = 0xB2     (Manual conversion, 3 wires at 60Hz)
+		# 0b10100010 = 0xA2     (Manual conversion, 2 or 4 wires at 60Hz)
+		# 0b11010010 = 0xD2     (Continuous auto conversion, 3 wires at 60 Hz) 
+		# 0b11000010 = 0xC2     (Continuous auto conversion, 2 or 4 wires at 60 Hz) 
 		#
 
 		#one shot
-		self.writeRegister(0, 0xD2)
+		self.writeRegister(0, self.ConfigReg)
 
 		# conversion time is less than 100ms
 		time.sleep(.1) #give it 100ms for conversion
@@ -91,14 +94,14 @@ class max31865(object):
 		rtd_ADC_Code = (( rtd_msb << 8 ) | rtd_lsb ) >> 1
 			
 		temp_C = self.calcPT100Temp(rtd_ADC_Code)
-		return temp_C
+		
 
-		#[hft_msb, hft_lsb] = [out[3], out[4]]
-		#hft = (( hft_msb << 8 ) | hft_lsb ) >> 1
+		[hft_msb, hft_lsb] = [out[3], out[4]]
+		hft = (( hft_msb << 8 ) | hft_lsb ) >> 1
 		#print "high fault threshold: %d" % hft
 
-		#[lft_msb, lft_lsb] = [out[5], out[6]]
-		#lft = (( lft_msb << 8 ) | lft_lsb ) >> 1
+		[lft_msb, lft_lsb] = [out[5], out[6]]
+		lft = (( lft_msb << 8 ) | lft_lsb ) >> 1
 		#print "low fault threshold: %d" % lft
 
 		status = out[7]
@@ -121,6 +124,8 @@ class max31865(object):
 		if ((status & 0x04) == 1):
 			raise FaultError("Overvoltage or Undervoltage Error") 
 		
+		return temp_C
+	
 	def writeRegister(self, regNum, dataByte):
 		GPIO.output(self.csPin, GPIO.LOW)
 		
@@ -174,7 +179,7 @@ class max31865(object):
 		a = .00390830
 		b = -.000000577500
 		# c = -4.18301e-12 # for -200 <= T <= 0 (degC)
-		c = -0.00000000000418301
+		#c = -0.00000000000418301
 		# c = 0 # for 0 <= T <= 850 (degC)
 		#print "RTD ADC Code: %d" % RTD_ADC_Code
 		Res_RTD = (RTD_ADC_Code * R_REF) / 32768.0 # PT100 Resistance
