@@ -7,7 +7,7 @@ import max31865
 @cbpi.sensor
 class PT100(SensorPassive):
     # CONFIG PARAMETER & PROPERTIES
-    csPin  = Property.Select("csPin", options=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], description="GPIO Pin connected to the CS Pin of the MAX31865 - For MOSI, MISO, CLK no choice by default it's PIN 9, 10, 11")
+    csPin  = Property.Select("csPin", options=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], description="GPIO Pin connected to the CS Pin of the MAX31865 - For MISO, MOSI, CLK no choice by default it's PIN 9, 10, 11")
     RefRest = Property.Number("Reference Resistor", configurable=True, description="Reference Resistor of the MAX31865 board (it's written on the resistor: 400 or 430,....)")
     misoPin = 9
     mosiPin = 10
