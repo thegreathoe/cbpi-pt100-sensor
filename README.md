@@ -21,6 +21,6 @@ The code for the request to the max chip is from https://github.com/steve71/MAX3
 
 Manuel neatened up my origional code and added the ability to select the cs pin.... so the rest of the credit goes there... I just kind of peieced it all together.
 
-8/2/17:: Pascal has been working on a pretty nice update which allows you to select the number of wires used on your probe in software... no more need to sever traces or solder jumpers on the board.  He has also been added as a contributer
+8/2/17:: Pascal has been working on a pretty nice update which allows you to select the number of wires used on your probe in software... you still need to sever traces or solder jumpers on the board!  He has also been added as a contributer
 
 7/2/17:: Verified with Pascal Fouchy that it is working on multiple sensors at once, and i have added the ability to change the reference resistor value from the craftbeerpi hardware page
